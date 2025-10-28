@@ -14,9 +14,22 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::with(['priority', 'tags'])->latest()->get();
+        $tasksQuery = Task::with(['priority', 'tags']);
+
+        // Aplicamos el filtro de estado, solo si está presente en la URL
+        $tasksQuery->when($request->estado, function ($query, $estado) {
+            return $query->where('estado', $estado);
+        });
+
+        // Aplicamos el filtro de fecha, solo si está presente en la URL
+        $tasksQuery->when($request->fecha_vencimiento, function ($query, $fecha) {
+            return $query->whereDate('fecha_vencimiento', $fecha);
+        });
+
+        // Ejecutamos la consulta final, ordenada por la más reciente
+        $tasks = $tasksQuery->latest()->get();
         return TaskResource::collection($tasks);
     }
 
