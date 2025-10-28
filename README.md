@@ -18,7 +18,7 @@ Esta es la API RESTful para la aplicación de gestión de tareas, construida con
 ## 💻 Stack Tecnológico
 
 -   PHP 8.2
--   Laravel 11
+-   Laravel 12
 -   Laravel Sail (Docker)
 -   MySQL
 -   Pest (para pruebas)
