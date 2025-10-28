@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -22,6 +23,14 @@ class DatabaseSeeder extends Seeder
             TagSeeder::class,
         ]);
 
-        \App\Models\Task::factory(20)->create();
+        User::factory()->create([
+            'name' => 'Usuario de Prueba',
+            'email' => 'test@example.com',
+            // La contraseña es "password"
+        ]);
+
+        User::factory(5)
+        ->has(Task::factory()->count(10)) // ¡Esta es la magia!
+        ->create();
     }
 }

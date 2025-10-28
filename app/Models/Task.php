@@ -17,6 +17,7 @@ class Task extends Model
         'estado',
         'fecha_vencimiento',
         'priority_id',
+        'user_id',
     ];
 
     protected $attributes = [
@@ -26,6 +27,11 @@ class Task extends Model
     public function priority(): BelongsTo
     {
         return $this->belongsTo(Priority::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function tags(): BelongsToMany
