@@ -19,6 +19,10 @@ class Task extends Model
         'priority_id',
     ];
 
+    protected $attributes = [
+        'estado' => 'pendiente',
+    ];
+
     public function priority(): BelongsTo
     {
         return $this->belongsTo(Priority::class);
