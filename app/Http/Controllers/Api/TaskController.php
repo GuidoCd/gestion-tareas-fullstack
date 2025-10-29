@@ -7,13 +7,13 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use AuthorizesRequests;
+    
     public function index(Request $request)
     {
         $tasksQuery = Task::with(['priority', 'tags']);
@@ -29,13 +29,15 @@ class TaskController extends Controller
         });
 
         // Ejecutamos la consulta final, ordenada por la más reciente
-        $tasks = $tasksQuery->latest()->get();
+        $tasks = $tasksQuery->latest()->paginate(10);
         return TaskResource::collection($tasks);
     }
 
     public function store(StoreTaskRequest $request)
     {
-        $task = Task::create($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = auth()->user()->id;
+        $task = Task::create($data);
         $task->tags()->attach($request->tags);
 
         return new TaskResource($task->load(['priority', 'tags']));
@@ -58,6 +60,7 @@ class TaskController extends Controller
 
     public function destroy(Task $task)
     {
+        $this->authorize('delete', $task);
         $task->delete();
         return response()->noContent();
     }

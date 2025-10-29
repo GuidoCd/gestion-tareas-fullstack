@@ -26,6 +26,7 @@ class TaskResource extends JsonResource
             'etiquetas' => $this->whenLoaded('tags', function () {
                 return $this->tags->pluck('etiqueta');
             }),
+            'user_id' => $this->user_id,
             'creado_en' => $this->created_at->toIso8601String(),
             'actualizado_en' => $this->updated_at->toIso8601String(),
         ];
